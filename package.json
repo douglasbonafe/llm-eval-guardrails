@@ -1,0 +1,69 @@
+{
+  "name": "llm-eval-guardrails",
+  "version": "1.0.0",
+  "description": "Evaluation and guardrails harness for LLM, RAG, and agentic applications — semantic/schema/groundedness assertions, confidence metrics, snapshot regression detection, trace-linked results, and a CI quality gate that blocks deploys when quality drops",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "llm-guardrail": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "eval": "tsx examples/run-eval.ts",
+    "eval:rag": "tsx examples/rag-groundedness.ts",
+    "gate": "tsx src/cli.ts",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "chalk": "^4.1.2",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "openai": "^4.57.0",
+    "zod": "^3.23.8"
+  },
+  "optionalDependencies": {
+    "@qdrant/js-client-rest": "^1.11.0",
+    "pg": "^8.12.0",
+    "pgvector": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "keywords": [
+    "llm",
+    "eval",
+    "evaluation",
+    "guardrails",
+    "rag",
+    "agentic",
+    "groundedness",
+    "faithfulness",
+    "semantic-similarity",
+    "regression-detection",
+    "quality-gate",
+    "traceability",
+    "openai",
+    "anthropic",
+    "groq",
+    "deepseek",
+    "pgvector",
+    "qdrant",
+    "vitest",
+    "sdet",
+    "ci"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Douglas Bonafé",
+  "license": "MIT"
+}

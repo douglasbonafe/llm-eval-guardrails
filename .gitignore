@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test / coverage
+coverage/
+.vitest/
+
+# Framework runtime artifacts
+.llm-eval/snapshots/
+*.eval-report.json
+
+# Environment — the real secrets file is never committed.
+# .env.local IS committed on purpose: it is the documented example template.
+.env
+.env.development
+.env.production
+.env.test
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE / editors
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
