@@ -1,7 +1,7 @@
 {
   "name": "llm-eval-guardrails",
-  "version": "1.0.0",
-  "description": "Evaluation and guardrails harness for LLM, RAG, and agentic applications — semantic/schema/groundedness assertions, confidence metrics, snapshot regression detection, trace-linked results, and a CI quality gate that blocks deploys when quality drops",
+  "version": "1.1.0",
+  "description": "Evaluation and guardrails harness for LLM, RAG, and agentic applications: a JSONL case set, deterministic and LLM-as-judge scoring, snapshot regression detection, and a CI quality gate that is itself tested against injected defects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -16,7 +16,10 @@
     "eval": "tsx examples/run-eval.ts",
     "eval:rag": "tsx examples/rag-groundedness.ts",
     "gate": "tsx src/cli.ts",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "gate:dataset": "tsx src/cli.ts gate --dataset datasets --responses datasets/responses/good.json --snapshot-dir baselines --baseline good",
+    "gate:selftest": "tsx src/cli.ts gate --dataset datasets --responses datasets/responses/degraded.json --snapshot-dir baselines --baseline good --expect-fail",
+    "baseline:update": "tsx src/cli.ts snapshot --dataset datasets --responses datasets/responses/good.json --snapshot-dir baselines --version good"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",

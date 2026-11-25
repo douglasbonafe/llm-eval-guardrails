@@ -5,6 +5,7 @@ import type {
   EvalCase,
   EvalRunResult,
   EmbeddingProvider,
+  Judge,
   LLMProvider,
 } from "../types";
 import { TraceStore } from "../trace/trace";
@@ -13,6 +14,8 @@ import { computeConfidence } from "./confidence";
 export interface EvalRunnerOptions {
   llm: LLMProvider;
   embeddings?: EmbeddingProvider;
+  /** Judge for rubric assertions (LLM-as-judge or recorded verdicts). */
+  judge?: Judge;
   traceStore?: TraceStore;
   /** Injectable clock for deterministic timestamps in tests. */
   now?: () => Date;
@@ -27,6 +30,7 @@ export interface EvalRunnerOptions {
 export class EvalRunner {
   private readonly llm: LLMProvider;
   private readonly embeddings?: EmbeddingProvider;
+  private readonly judge?: Judge;
   readonly traces: TraceStore;
   private readonly now: () => Date;
   private readonly runIdGen: () => string;
@@ -34,6 +38,7 @@ export class EvalRunner {
   constructor(opts: EvalRunnerOptions) {
     this.llm = opts.llm;
     this.embeddings = opts.embeddings;
+    this.judge = opts.judge;
     this.traces = opts.traceStore ?? new TraceStore();
     this.now = opts.now ?? (() => new Date());
     this.runIdGen =
@@ -77,6 +82,7 @@ export class EvalRunner {
       const completion = await this.llm.complete({
         messages: c.input,
         temperature: 0,
+        caseId: c.id,
       });
       trace.setResponse(completion.text, completion.model);
 
@@ -85,6 +91,9 @@ export class EvalRunner {
         context: c.context,
         embeddings: this.embeddings,
         completion,
+        caseId: c.id,
+        input: c.input,
+        judge: this.judge,
       };
 
       const assertionResults: AssertionResult[] = [];

@@ -1,0 +1,6 @@
+{"id": "capital-france", "prompt": "What is the capital of France? Answer with a single word.", "assertions": [{"type": "exact", "expected": "Paris", "caseInsensitive": true}]}
+{"id": "arithmetic-17x23", "prompt": "What is 17 times 23? Reply with only the number.", "assertions": [{"type": "regex", "pattern": "^\\s*391\\s*$"}]}
+{"id": "apollo-11-year", "prompt": "In what year did Apollo 11 land on the Moon? Reply with only the year.", "assertions": [{"type": "exact", "expected": "1969"}]}
+{"id": "capital-brasil-ptbr", "prompt": "Qual é a capital do Brasil? Responda com uma palavra.", "assertions": [{"type": "exact", "expected": "Brasília", "caseInsensitive": true}]}
+{"id": "water-boiling-point", "prompt": "At sea level, at what temperature in Celsius does water boil? Reply with only the number.", "assertions": [{"type": "regex", "pattern": "^\\s*100\\s*$"}]}
+{"id": "prime-97", "prompt": "Is 97 a prime number? Answer only Yes or No.", "assertions": [{"type": "exact", "expected": "Yes", "caseInsensitive": true}]}

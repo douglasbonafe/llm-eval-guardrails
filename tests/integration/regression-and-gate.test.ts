@@ -55,4 +55,19 @@ describe("regression detection + quality gate", () => {
     expect(gate.passed).toBe(false);
     expect(gate.violations[0].rule).toBe("confidence");
   });
+
+  it("fails on a critical-tagged case even when pass rate clears the floor", async () => {
+    const many: EvalCase[] = Array.from({ length: 20 }, (_, i) => ({
+      id: `n${i}`,
+      input: [{ role: "user", content: `n${i}` }],
+      assertions: [exactMatch("good")],
+      tags: i === 0 ? ["critical"] : [],
+    }));
+    const llm = new MockLLMProvider((o) => ([...o.messages].reverse().find((m) => m.role === "user")?.content === "n0" ? "bad" : "good"));
+    const run = await new EvalRunner({ llm }).run(many);
+    expect(run.passRate).toBe(0.95);
+    const gate = evaluateGate(run, { minPassRate: 0.9, minConfidence: 0.3, maxRegressions: 0 });
+    expect(gate.violations.map((v) => v.rule)).toEqual(["critical"]);
+    expect(evaluateGate(run, { minPassRate: 0.9, minConfidence: 0.3, maxRegressions: 0, maxCriticalFailures: 1 }).passed).toBe(true);
+  });
 });

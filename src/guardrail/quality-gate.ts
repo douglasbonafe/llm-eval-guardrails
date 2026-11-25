@@ -5,10 +5,12 @@ export interface GateThresholds {
   minPassRate: number;
   minConfidence: number;
   maxRegressions: number;
+  /** Cases tagged "critical" (safety, injection, leaks) that may fail. Default 0. */
+  maxCriticalFailures?: number;
 }
 
 export interface GateViolation {
-  rule: "pass-rate" | "confidence" | "regressions";
+  rule: "pass-rate" | "confidence" | "regressions" | "critical";
   message: string;
   actual: number;
   limit: number;
@@ -63,6 +65,17 @@ export function evaluateGate(
       message: `${regressionCount} regression(s) exceed the max allowed ${thresholds.maxRegressions}: ${ids}`,
       actual: regressionCount,
       limit: thresholds.maxRegressions,
+    });
+  }
+
+  const maxCritical = thresholds.maxCriticalFailures ?? 0;
+  const criticalFailed = run.cases.filter((c) => !c.passed && c.tags?.includes("critical"));
+  if (criticalFailed.length > maxCritical) {
+    violations.push({
+      rule: "critical",
+      message: `${criticalFailed.length} critical case(s) failed (max ${maxCritical}): ${criticalFailed.map((c) => c.caseId).join(", ")}`,
+      actual: criticalFailed.length,
+      limit: maxCritical,
     });
   }
 

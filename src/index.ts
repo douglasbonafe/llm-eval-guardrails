@@ -26,6 +26,9 @@ export type {
   EvalCase,
   CaseResult,
   EvalRunResult,
+  Judge,
+  JudgeRequest,
+  JudgeVerdict,
 } from "./types";
 
 // Providers
@@ -33,6 +36,14 @@ export { MockLLMProvider, type MockResponder } from "./providers/llm/mock";
 export { OpenAICompatibleProvider } from "./providers/llm/openai-compatible";
 export { AnthropicProvider } from "./providers/llm/anthropic";
 export { createLLMProvider } from "./providers/llm/factory";
+export { ReplayLLMProvider, RecordingLLMProvider } from "./providers/llm/replay";
+
+// Judges (LLM-as-judge and recorded verdicts)
+export { LLMJudge, RecordedJudge, RecordingJudge, parseJudgeReply, normalizeJudgeScore } from "./judge/judge";
+
+// Datasets (declarative JSONL cases + recorded response sets)
+export { loadDataset, loadResponseSet, saveResponseSet, missingOutputs, compileAssertion } from "./dataset/loader";
+export { CaseSpec, AssertionSpec, ResponseSet, type ResponseSetT } from "./dataset/schema";
 
 // Embeddings
 export { LocalEmbeddingProvider } from "./providers/embeddings/local";
@@ -55,7 +66,7 @@ export { TraceStore, type TraceRecord, type TraceHandle } from "./trace/trace";
 // Eval
 export { EvalRunner, type EvalRunnerOptions } from "./eval/runner";
 export { computeConfidence } from "./eval/confidence";
-export { renderConsoleReport, toJsonReport } from "./eval/report";
+export { renderConsoleReport, toJsonReport, renderMarkdownSummary } from "./eval/report";
 
 // Snapshot / regression
 export {

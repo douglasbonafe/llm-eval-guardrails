@@ -14,6 +14,8 @@ export interface CompletionOptions {
   model?: string;
   temperature?: number;
   maxTokens?: number;
+  /** Id of the eval case being run. Replay/recording providers key on it. */
+  caseId?: string;
 }
 
 /** Normalized completion result across providers. */
@@ -115,6 +117,32 @@ export interface AssertionContext {
   embeddings?: EmbeddingProvider;
   /** The full completion result, when confidence signals are needed. */
   completion?: CompletionResult;
+  /** Id of the case being evaluated (judges that replay verdicts key on it). */
+  caseId?: string;
+  /** The messages that produced the output (rubric judging). */
+  input?: ChatMessage[];
+  /** Judge used by rubric assertions. Absent => rubric assertions fail loudly. */
+  judge?: Judge;
+}
+
+/** A verdict from a judge, normalized to 0..1. */
+export interface JudgeVerdict {
+  score: number;
+  reason: string;
+}
+
+export interface JudgeRequest {
+  caseId: string;
+  criteria: string;
+  input: ChatMessage[];
+  output: string;
+  context?: string[];
+}
+
+/** Grades an output against written criteria (LLM-as-judge or a recorded verdict). */
+export interface Judge {
+  readonly name: string;
+  grade(req: JudgeRequest): Promise<JudgeVerdict>;
 }
 
 /** Result of evaluating one case. */

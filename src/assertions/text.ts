@@ -74,3 +74,17 @@ export function matchesRegex(pattern: RegExp | string, flags?: string): Assertio
     },
   };
 }
+
+/** Output must not exceed a character budget (verbosity / truncation guard). */
+export function maxLength(limit: number): Assertion {
+  return {
+    type: "max-length",
+    evaluate(ctx: AssertionContext) {
+      const len = ctx.output.length;
+      const passed = len <= limit;
+      return result("max-length", passed, passed ? 1 : Math.max(0, 1 - (len - limit) / limit), `Output is ${len} chars (limit ${limit})`, {
+        detail: { length: len, limit },
+      });
+    },
+  };
+}
